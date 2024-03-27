@@ -1,0 +1,67 @@
+# connectModules:
+#   "confluence:lifecycle":
+#     [
+#       { "key": "connect-lifecycle", "installed": "/installed" }
+#     ]
+#   "confluence:dynamicContentMacros":
+#     [
+#       {
+#           "width": "200px",
+#           "height": "200px",
+#           "url": "/map-viewer?pageTitle={page.title}&viewChoice={view}",
+#           "description": { "value": "Shows a configurable map (JB dynamic mac)" },
+#           "documentation": { "url": "http://docs.example.com/addons/maps" },
+#           "parameters":
+#             [
+#               {
+#                   "identifier": "view",
+#                   "name": { "value": "Map View" },
+#                   "description": { "value": "Allows switching between view types" },
+#                   "type": "enum",
+#                   "required": true,
+#                   "multiple": false,
+#                   "defaultValue": "Map",
+#                   "values": [ "Map", "Satellite" ],
+#                   "hidden": false,
+#                   "indexing": { "enabled": true }
+#                 }
+#             ],
+#           "name": { "value": "JB Maps" },
+#           "key": "dynamic-macro-example"
+#         }
+#     ]
+modules:
+  macro:
+    - key: forge-general-hello-world-macro
+      resource: main
+      render: native
+      resolver:
+        function: resolver
+      title: forge_general
+  webtrigger:
+    - key: example-web-trigger-key
+      function: web-trigger-function
+  function:
+    - key: resolver
+      handler: index.handler
+    - key: web-trigger-function
+      handler: index.runWebTrigger
+resources:
+  - key: main
+    path: src/frontend/index.jsx
+permissions:
+  scopes:
+    - read:confluence-content.summary
+    - read:app-data:confluence
+    - write:app-data:confluence
+    - read:connect-confluence
+    - write:connect-confluence
+# remotes:
+#   - key: connect
+#     baseUrl: https://pattern-simple-chauffeur.glitch.me
+app:
+  id: ari:cloud:ecosystem::app/95e7e49b-d0a7-40c4-9b4b-93c13825f50b # for staging
+  # connect:
+  #   key: my-app-conf-glitch
+  #   remote: connect
+  # id: ari:cloud:ecosystem::app/3d77b560-82c6-4107-bda2-f12d041f07fb
