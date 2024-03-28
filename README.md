@@ -34,3 +34,9 @@ forge tunnel
 - Use the `forge install` command when you want to install the app on a new site.
 - Once the app is installed on a site, the site picks up the new app changes you deploy without needing to rerun the install command.
 
+### In order to validate Forge request based on Confluence Spaces
+- Create 2 spaces, one for AARAllowed, the other for AARBlocked (sorry about hardcode - we can improve this later)
+- set up app policy based on these spaces whatever you want (https://admin.stg.atlassian.com -> security -> data policy etc)
+- (assuming you have already installed the app) run, `forge webtrigger` and select your installation to grab the webtrigger url
+- enjoy the result (no auth required)
+
