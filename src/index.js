@@ -1,35 +1,61 @@
 import api, { route, asApp, asUser } from "@forge/api";
 
-export { handler } from './resolvers';
+export { handler } from "./resolvers";
 
 exports.runWebTrigger = async () => {
-  const allowedSpaceKey = "AARAllowed";
-  const res = await asApp().requestConfluence(route `/wiki/rest/api/space/${allowedSpaceKey}/content`);
-  const data = await res.json();
-  console.log(`result AARAllowed: ${JSON.stringify(data)}`);
+  try {
+    const reqBody = JSON.parse(request.body);
+    const space_list = reqBody.space_list;
+    if (!space_list) {
+      throw new Error("space_list property is missing in the request body.");
+    }
 
-  const blockedSpaceKey = "AARBlocked";
-  const res1 = await asApp().requestConfluence(route `/wiki/rest/api/space/${blockedSpaceKey}/content`);
-  const data1 = await res1.json();
-  console.log(`result AARBlocked: ${JSON.stringify(data1)}`);
+    if (!Array.isArray(space_list)) {
+      throw new Error("space_list property must be array in the request body.");
+    }
 
-  let results = [];
-  results.push({
-    message: `result AARAllowed`,
-    result: data
-  });
-  results.push({
-    message: `result AARBlocked`,
-    result: data1
-  });
+    let results = [];
+    for (var i = 0; i < space_list.length; i++) {
+      const space = space_list[i];
+      try {
+        const res = await asApp().requestConfluence(
+          route`/wiki/rest/api/space/${space}/content`
+        );
 
-  return {
-    body: JSON.stringify(results),
-    headers: {
-      'Content-Type': ['application/json'],
-      // 'X-Request-Id': [`rnd-${rnd}`]
-    },
-    statusCode: 200,
-    statusText: 'Triggered'
-  };
+        const data = await res.json();
+        results.push({
+          message: `result of ${space}`,
+          result: data,
+        });
+      } catch (err) {
+        results.push({
+          message: `result of ${space}`,
+          result: `(error) ${err.message}`,
+        });
+      }
+    }
+
+    return {
+      body: JSON.stringify(results),
+      headers: {
+        "Content-Type": ["application/json"],
+        // 'X-Request-Id': [`rnd-${rnd}`]
+      },
+      statusCode: 200,
+      statusText: "Triggered",
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      body: JSON.stringify({
+        message: `make sure you gotta pass "space_list" (i.e { "space_list": ["spaceA", "spaceB"] }) in a request body. ${e}`,
+      }),
+      headers: {
+        "Content-Type": ["application/json"],
+        // 'X-Request-Id': [`rnd-${rnd}`]
+      },
+      statusCode: 409,
+      statusText: "Triggered",
+    };
+  }
 };
