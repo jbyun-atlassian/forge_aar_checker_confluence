@@ -2,7 +2,7 @@ import api, { route, asApp, asUser } from "@forge/api";
 
 export { handler } from "./resolvers";
 
-exports.runWebTrigger = async () => {
+exports.runWebTrigger = async (request) => {
   try {
     const reqBody = JSON.parse(request.body);
     const space_list = reqBody.space_list;
