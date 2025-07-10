@@ -13,7 +13,7 @@ Playing with Webtrigger to simulate Forge request to the Product (Confluence)
 Playing with Webtrigger of consuming Forge app property api to simulate Forge request to the Product (Confluence)
 - `forge webtrigger`
 - ping the url returned (there is no auth) (POST)
-- for Upserting app property, pass key and JSON value as request Body ({
+- for Upserting app property, pass property_key and property_value (JSON formatted) as request Body ({
     "property_key": "testKey",
     "property_value": {
         "hello": "world"
