@@ -9,7 +9,7 @@
 #           "width": "200px",
 #           "height": "200px",
 #           "url": "/map-viewer?pageTitle={page.title}&viewChoice={view}",
-#           "description": { "value": "Shows a configurable map (JB dynamic mac)" },
+#           "description": { "value": "JB Maps (Connect Macro)" },
 #           "documentation": { "url": "http://docs.example.com/addons/maps" },
 #           "parameters":
 #             [
@@ -26,7 +26,7 @@
 #                   "indexing": { "enabled": true }
 #                 }
 #             ],
-#           "name": { "value": "JB Maps" },
+#           "name": { "value": "JB Maps (Connect Macro)" },
 #           "key": "dynamic-macro-example"
 #         }
 #     ]
@@ -37,31 +37,43 @@ modules:
       render: native
       resolver:
         function: resolver
-      title: forge_general
+      title: JB Forge Macro
   webtrigger:
     - key: example-web-trigger-key
       function: web-trigger-function
+    - key: web-trigger-app-prop
+      function: function-app-prop
+    - key: delete-app-prop
+      function: func-del-app-prop
   function:
     - key: resolver
       handler: index.handler
     - key: web-trigger-function
       handler: index.runWebTrigger
+    - key: function-app-prop
+      handler: index.runTriggerFunctionAppProperties
+    - key: func-del-app-prop
+      handler: index.runDeleteAppProperties
 resources:
   - key: main
     path: src/frontend/index.jsx
 permissions:
   scopes:
     - read:confluence-content.summary
-    - read:app-data:confluence
-    - write:app-data:confluence
     - read:connect-confluence
     - write:connect-confluence
+    - read:app-data:confluence
+    - act-as-user:connect-confluence
+    - write:app-data:confluence
 # remotes:
 #   - key: connect
 #     baseUrl: https://pattern-simple-chauffeur.glitch.me
 app:
-  id: ari:cloud:ecosystem::app/95e7e49b-d0a7-40c4-9b4b-93c13825f50b # for staging
+  id: ari:cloud:ecosystem::app/95e7e49b-d0a7-40c4-9b4b-93c13825f50b # for staging for h11n
+  # id: ari:cloud:ecosystem::app/3d77b560-82c6-4107-bda2-f12d041f07fb # prod for h11n
+  # id: ari:cloud:ecosystem::app/41183d77-cfbf-42c4-ab4b-adf4851a9958 # prod for pure_forge
   # connect:
   #   key: my-app-conf-glitch
   #   remote: connect
-  # id: ari:cloud:ecosystem::app/3d77b560-82c6-4107-bda2-f12d041f07fb
+  runtime:
+    name: nodejs20.x
