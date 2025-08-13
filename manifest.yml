@@ -31,13 +31,39 @@
 #         }
 #     ]
 modules:
+  confluence:spacePage:
+    - key: complex-conditions-space-page
+      resource: main
+      render: native
+      resolver:
+        function: resolver
+      title:
+        i18n: complexConditionsSpacePage.title
+      route: space-complex-conditions
+      displayConditions:
+        appIsLicensed: true
+        not:
+          appIsLicensed: false
+        and:
+          - appEdition: standard
+          - not:
+              appEdition: advanced
+          - entityPropertyEqualTo:
+              entity: content
+              propertyKey: key1
+              value: value1
+          - entityPropertyEqualTo:
+              entity: space
+              propertyKey: key2
+              value: value2
   macro:
     - key: forge-general-hello-world-macro
       resource: main
       render: native
       resolver:
         function: resolver
-      title: JB Forge Macro
+      title:
+        i18n: helloMacro.title
   webtrigger:
     - key: example-web-trigger-key
       function: web-trigger-function
@@ -65,6 +91,24 @@ permissions:
     - read:app-data:confluence
     - act-as-user:connect-confluence
     - write:app-data:confluence
+translations:
+  resources:
+    - key: en-US
+      path: src/frontend/locales/en-US.json
+    - key: zh-CN
+      path: src/frontend/locales/zh-CN.json
+    - key: zh-TW
+      path: src/frontend/locales/zh-TW.json
+    - key: de-DE
+      path: src/frontend/locales/de-DE.json
+  fallback:
+    default: en-US
+    zh-TW:
+      - zh-CN
+    ja-JP:
+      - de-DE
+      - zh-CN
+
 # remotes:
 #   - key: connect
 #     baseUrl: https://pattern-simple-chauffeur.glitch.me
